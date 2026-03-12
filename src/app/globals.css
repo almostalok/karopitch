@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@theme {
+  --color-accent: #e8650a;
+  --color-accent-hover: #ff7a1a;
+  --color-ink: #0a0a0a;
+  --color-paper: #f5f2ed;
+  --color-dim: #888;
+  --color-ghost: #c8c4bd;
+  --color-card: #ffffff;
+  --color-elevated: #edeae4;
+  --font-display: var(--font-playfair), "Georgia", serif;
+  --font-sans: var(--font-space), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+}
+
+:root {
+  --accent: #e8650a;
+  --ink: #0a0a0a;
+  --paper: #f5f2ed;
+}
+
+/* ─── Base ─── */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 400;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ─── Custom cursor (desktop only) ─── */
+@media (min-width: 768px) {
+  body { cursor: none; }
+  a, button, [data-hover] { cursor: none !important; }
+}
+
+.cursor-dot {
+  position: fixed; top: 0; left: 0;
+  width: 8px; height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: var(--accent);
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+
+.cursor-ring {
+  position: fixed; top: 0; left: 0;
+  width: 48px; height: 48px;
+  margin: -24px 0 0 -24px;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 101, 10, 0.35);
+  pointer-events: none;
+  z-index: 9998;
+  mix-blend-mode: difference;
+}
+
+/* ─── Typography ─── */
+h1, h2, h3 {
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.font-display {
+  font-family: var(--font-playfair), "Georgia", serif;
+}
+
+.font-sans {
+  font-family: var(--font-space), system-ui, sans-serif;
+}
+
+/* ─── Layout ─── */
+.container-wide {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 5vw, 4rem);
+}
+
+.container-narrow {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 5vw, 4rem);
+}
+
+/* ─── Noise grain ─── */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  width: 200%; height: 200%;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(10,10,10,0.12); border-radius: 2px; }
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ─── Marquee keyframe ─── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+/* ─── Clip reveal mask ─── */
+.clip-inset-hide { clip-path: inset(0 0 100% 0); }
+.clip-inset-show { clip-path: inset(0 0 0 0); }
+
+/* ─── Horizontal rule decorative ─── */
+.hr-accent {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  border: none;
+  opacity: 0.3;
+}
+
+/* ─── Smooth image reveal ─── */
+@keyframes imageReveal {
+  from { clip-path: inset(100% 0 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+/* ─── Big number utility ─── */
+.big-number {
+  font-family: var(--font-playfair), serif;
+  font-weight: 800;
+  font-style: italic;
+  color: rgba(10, 10, 10, 0.03);
+  line-height: 0.85;
+  user-select: none;
+  pointer-events: none;
+}
