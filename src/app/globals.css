@@ -10,6 +10,9 @@
   --color-card: #ffffff;
   --color-elevated: #edeae4;
   --font-display: var(--font-playfair), "Georgia", serif;
+  --font-editorial: var(--font-cormorant), "Times New Roman", serif;
+  --font-condensed: var(--font-bebas), Impact, sans-serif;
+  --font-mono: var(--font-ibm-mono), "Courier New", monospace;
   --font-sans: var(--font-space), system-ui, sans-serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
 }
@@ -45,24 +48,45 @@ body {
 
 .cursor-dot {
   position: fixed; top: 0; left: 0;
-  width: 8px; height: 8px;
-  margin: -4px 0 0 -4px;
+  width: 14px; height: 14px;
+  margin: -7px 0 0 -7px;
   border-radius: 50%;
-  background: var(--accent);
+  background: radial-gradient(circle at 35% 35%, #ffb37c 0%, #ff8a3d 35%, #e8650a 70%, #9d4200 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 170, 111, 0.5),
+    0 0 18px rgba(232, 101, 10, 0.48),
+    0 0 32px rgba(180, 78, 4, 0.24);
   pointer-events: none;
   z-index: 9999;
-  mix-blend-mode: difference;
+  mix-blend-mode: normal;
 }
 
-.cursor-ring {
+.cursor-pointer {
   position: fixed; top: 0; left: 0;
-  width: 48px; height: 48px;
-  margin: -24px 0 0 -24px;
-  border-radius: 50%;
-  border: 1px solid rgba(232, 101, 10, 0.35);
+  width: 26px; height: 34px;
+  margin: -3px 0 0 2px;
+  background: linear-gradient(155deg, #ffd0aa 0%, #ff9345 28%, #e8650a 68%, #8d3500 100%);
+  clip-path: polygon(0 0, 74% 52%, 48% 56%, 76% 100%, 58% 100%, 34% 59%, 0 82%);
+  box-shadow:
+    0 0 0 1px rgba(112, 45, 0, 0.18),
+    0 0 20px rgba(232, 101, 10, 0.24),
+    0 8px 18px rgba(118, 46, 0, 0.18);
   pointer-events: none;
   z-index: 9998;
-  mix-blend-mode: difference;
+  mix-blend-mode: normal;
+  transform-origin: 18% 12%;
+}
+
+.cursor-aura {
+  position: fixed; top: 0; left: 0;
+  width: 88px; height: 88px;
+  margin: -44px 0 0 -44px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 146, 70, 0.28) 0%, rgba(232, 101, 10, 0.12) 38%, rgba(180, 78, 4, 0) 72%);
+  filter: blur(6px);
+  pointer-events: none;
+  z-index: 9997;
+  mix-blend-mode: normal;
 }
 
 /* ─── Typography ─── */
@@ -79,6 +103,19 @@ h1, h2, h3 {
 
 .font-sans {
   font-family: var(--font-space), system-ui, sans-serif;
+}
+
+.font-editorial {
+  font-family: var(--font-cormorant), "Times New Roman", serif;
+}
+
+.font-condensed {
+  font-family: var(--font-bebas), Impact, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.font-mono-ui {
+  font-family: var(--font-mono), "Courier New", monospace;
 }
 
 /* ─── Layout ─── */
@@ -154,4 +191,161 @@ h1, h2, h3 {
   line-height: 0.85;
   user-select: none;
   pointer-events: none;
+}
+
+/* ─── Animated gradient text ─── */
+.gradient-text {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent) 0%, #ff9a56 40%, var(--accent) 80%, #ff9a56 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding: 0.08em 0.03em 0.14em;
+  margin: -0.08em -0.03em -0.14em;
+  line-height: 1.08;
+  animation: gradientShift 6s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ─── Text stroke (outlined) ─── */
+.text-outline {
+  -webkit-text-stroke: 1.5px currentColor;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── Glass card ─── */
+.glass {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-dark {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ─── Card glow on hover ─── */
+.card-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, transparent 30%, rgba(232, 101, 10, 0.15) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.card-glow:hover::before {
+  opacity: 1;
+}
+
+/* ─── Accent gradient bg ─── */
+.bg-accent-gradient {
+  background: linear-gradient(135deg, rgba(232, 101, 10, 0.04) 0%, transparent 60%);
+}
+
+/* ─── Dark gradient mesh ─── */
+.bg-mesh-dark {
+  background: 
+    radial-gradient(ellipse 60% 50% at 20% 30%, rgba(232, 101, 10, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 80% 70%, rgba(232, 101, 10, 0.05) 0%, transparent 70%),
+    #0a0a0a;
+}
+
+/* ─── Horizontal rule with gradient glow ─── */
+.divider-glow {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent) 30%, var(--accent) 70%, transparent 100%);
+  opacity: 0.2;
+}
+
+/* ─── Number badge ─── */
+.num-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ─── Spotlight hover effect ─── */
+.spotlight {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,101,10,0.08) 0%, transparent 70%);
+  transform: translate(-100%, -100%);
+  transition: none;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── Striped decorative bg ─── */
+.stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8px,
+    rgba(232, 101, 10, 0.02) 8px,
+    rgba(232, 101, 10, 0.02) 16px
+  );
+}
+
+.section-kicker {
+  font-family: var(--font-mono), "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.section-frame {
+  border: 1px solid rgba(10, 10, 10, 0.06);
+  box-shadow: 0 12px 48px rgba(10, 10, 10, 0.03);
+}
+
+.section-frame-dark {
+  border: 1px solid rgba(245, 242, 237, 0.08);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.2);
+}
+
+.paper-grid {
+  background-image:
+    linear-gradient(rgba(10, 10, 10, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 10, 10, 0.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.stacked-shadow {
+  text-shadow:
+    1px 1px 0 rgba(232, 101, 10, 0.08),
+    2px 2px 0 rgba(232, 101, 10, 0.04);
 }

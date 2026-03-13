@@ -9,7 +9,6 @@ import {
   useScroll,
   useTransform,
   type Variants,
-  AnimatePresence,
 } from "framer-motion";
 
 /* ══════════════════════════════════════════
@@ -32,7 +31,7 @@ export function ClipReveal({
   const inView = useInView(ref, { once: true, margin: "-12%" });
 
   return (
-    <div ref={ref} className={`overflow-hidden ${className}`}>
+    <div ref={ref} className={`overflow-hidden py-[0.12em] -my-[0.12em] ${className}`}>
       <motion.div
         initial={{ clipPath: "inset(100% 0 0 0)" }}
         animate={inView ? { clipPath: "inset(0% 0 0 0)" } : undefined}
@@ -62,9 +61,9 @@ export function CharReveal({
   return (
     <Tag ref={ref} className={className} aria-label={text}>
       {text.split("").map((char, i) => (
-        <span key={i} className="inline-block overflow-hidden">
+        <span key={i} className="inline-block overflow-hidden py-[0.14em] -my-[0.14em]">
           <motion.span
-            className="inline-block"
+            className="inline-block align-baseline"
             initial={{ y: "120%", rotate: 8 }}
             animate={inView ? { y: "0%", rotate: 0 } : undefined}
             transition={{
@@ -335,6 +334,110 @@ export function ImageReveal({
       >
         {children}
       </motion.div>
+    </div>
+  );
+}
+
+/* ─── 3D Tilt Card ─── */
+export function TiltCard({
+  children,
+  className = "",
+  intensity = 10,
+}: {
+  children: ReactNode;
+  className?: string;
+  intensity?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const rotX = useMotionValue(0);
+  const rotY = useMotionValue(0);
+  const sRotX = useSpring(rotX, { stiffness: 200, damping: 20 });
+  const sRotY = useSpring(rotY, { stiffness: 200, damping: 20 });
+
+  const move = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    const cx = (e.clientX - r.left) / r.width - 0.5;
+    const cy = (e.clientY - r.top) / r.height - 0.5;
+    rotX.set(-cy * intensity);
+    rotY.set(cx * intensity);
+  };
+  const leave = () => {
+    rotX.set(0);
+    rotY.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={move}
+      onMouseLeave={leave}
+      style={{
+        rotateX: sRotX,
+        rotateY: sRotY,
+        transformPerspective: 800,
+        transformStyle: "preserve-3d",
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ─── Gradient animated text ─── */
+export function GradientText({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <span className={`gradient-text ${className}`}>
+      {children}
+    </span>
+  );
+}
+
+/* ─── Floating ambient motion ─── */
+export function FloatingElement({
+  children,
+  className = "",
+  range = 12,
+  duration = 5,
+}: {
+  children: ReactNode;
+  className?: string;
+  range?: number;
+  duration?: number;
+}) {
+  return (
+    <motion.div
+      className={className}
+      animate={{ y: [-range, range, -range] }}
+      transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ─── Scroll-triggered progress bar ─── */
+export function ScrollProgress({
+  className = "",
+}: {
+  className?: string;
+}) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+
+  return (
+    <div ref={ref} className={`h-px bg-ink/5 overflow-hidden ${className}`}>
+      <motion.div
+        className="h-full bg-accent origin-left"
+        style={{ scaleX: scrollYProgress }}
+      />
     </div>
   );
 }

@@ -4,15 +4,17 @@ import { useEffect, useState, useCallback } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function Cursor() {
-  const [mounted, setMounted] = useState(false);
   const [hovering, setHovering] = useState(false);
   const [hidden, setHidden] = useState(false);
 
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
-  const ringX = useSpring(x, { damping: 28, stiffness: 180, mass: 0.5 });
-  const ringY = useSpring(y, { damping: 28, stiffness: 180, mass: 0.5 });
-  const scale = useSpring(1, { damping: 20, stiffness: 300 });
+  const pointerX = useSpring(x, { damping: 28, stiffness: 180, mass: 0.5 });
+  const pointerY = useSpring(y, { damping: 28, stiffness: 180, mass: 0.5 });
+  const auraX = useSpring(x, { damping: 34, stiffness: 140, mass: 0.9 });
+  const auraY = useSpring(y, { damping: 34, stiffness: 140, mass: 0.9 });
+  const dotScale = useSpring(1, { damping: 20, stiffness: 300 });
+  const pointerScale = useSpring(1, { damping: 22, stiffness: 260 });
 
   const onMove = useCallback(
     (e: MouseEvent) => {
@@ -23,8 +25,6 @@ export default function Cursor() {
   );
 
   useEffect(() => {
-    setMounted(true);
-
     const onOver = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
       const hit =
@@ -51,26 +51,35 @@ export default function Cursor() {
   }, [onMove]);
 
   useEffect(() => {
-    scale.set(hovering ? 2.2 : 1);
-  }, [hovering, scale]);
-
-  if (!mounted) return null;
+    dotScale.set(hovering ? 1.45 : 1);
+    pointerScale.set(hovering ? 1.18 : 1);
+  }, [hovering, dotScale, pointerScale]);
 
   return (
     <>
+      {/* Aura */}
+      <motion.div
+        className="cursor-aura hidden md:block"
+        style={{
+          x: auraX,
+          y: auraY,
+          scale: pointerScale,
+          opacity: hidden ? 0 : hovering ? 0.5 : 0.28,
+        }}
+      />
       {/* Dot */}
       <motion.div
         className="cursor-dot hidden md:block"
-        style={{ x, y, opacity: hidden ? 0 : 1 }}
+        style={{ x, y, scale: dotScale, opacity: hidden ? 0 : 1 }}
       />
-      {/* Ring */}
+      {/* Pointer */}
       <motion.div
-        className="cursor-ring hidden md:block"
+        className="cursor-pointer hidden md:block"
         style={{
-          x: ringX,
-          y: ringY,
-          scale,
-          opacity: hidden ? 0 : hovering ? 0.6 : 0.35,
+          x: pointerX,
+          y: pointerY,
+          scale: pointerScale,
+          opacity: hidden ? 0 : hovering ? 0.95 : 0.75,
         }}
       />
     </>

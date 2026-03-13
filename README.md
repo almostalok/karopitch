@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# KaroPitch
+
+Production-grade landing experience for founder-investor matching, built with Next.js App Router, Framer Motion, and a modular feature-first architecture.
+
+## Tech Stack
+
+- Framework: Next.js 16 (App Router, Turbopack)
+- Language: TypeScript
+- Styling: Tailwind CSS v4 + custom design tokens in `src/app/globals.css`
+- Motion: Framer Motion
+- Icons: Lucide React
+- Fonts: Space Grotesk, Playfair Display, Cormorant Garamond, Bebas Neue, IBM Plex Mono, Inter
+
+## Project Structure
+
+```text
+.
+├─ src/
+│  ├─ app/
+│  │  ├─ globals.css
+│  │  ├─ layout.tsx
+│  │  └─ page.tsx
+│  ├─ components/
+│  │  ├─ Animations.tsx
+│  │  └─ Cursor.tsx
+│  └─ features/
+│     └─ home/
+│        ├─ HomePage.tsx
+│        └─ sections/
+│           ├─ AboutSection.tsx
+│           ├─ EligibilitySection.tsx
+│           ├─ FinalCtaSection.tsx
+│           ├─ FooterSection.tsx
+│           ├─ HeroSection.tsx
+│           ├─ InvestorsSection.tsx
+│           ├─ MarqueeBand.tsx
+│           ├─ NavBar.tsx
+│           ├─ OriginSection.tsx
+│           ├─ PortfolioSection.tsx
+│           ├─ ProcessSection.tsx
+│           └─ SectionDivider.tsx
+├─ next.config.ts
+├─ package.json
+└─ tsconfig.json
+```
+
+## Architecture Notes
+
+- `src/app/page.tsx` is intentionally thin and delegates to feature modules.
+- `src/features/home/HomePage.tsx` owns page-level orchestration:
+  - Scroll-derived motion values
+  - Section composition order
+  - Shared section divider configuration
+- `src/features/home/sections/*` contains isolated, reusable section components.
+- `src/components/Animations.tsx` centralizes reusable animation primitives (`Reveal`, `ClipReveal`, `CharReveal`, etc.).
+- `src/components/Cursor.tsx` contains the custom cursor system.
+
+This separation keeps routing simple while making UI modules easier to test, iterate, and scale.
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Start local development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App runs at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Build for production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+### 4. Run production server locally
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Available Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev`: Start development server
+- `npm run build`: Create optimized production build
+- `npm run start`: Run production build
+- `npm run lint`: Run ESLint checks
 
-## Deploy on Vercel
+## Production Conventions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Keep route files (`src/app/**`) minimal; push feature logic into `src/features/**`.
+- Add new homepage blocks under `src/features/home/sections/`.
+- Reuse animation primitives from `src/components/Animations.tsx` before creating new ones.
+- Keep visual tokens and global utilities in `src/app/globals.css`.
+- Prefer declarative data maps for repeated cards and stats.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Quality Checklist
+
+Before merging changes:
+
+1. Run `npm run lint`
+2. Run `npm run build`
+3. Verify desktop + mobile layouts for all sections
+4. Verify custom cursor behavior on desktop only
+5. Verify major reveal animations do not clip text
+
+## Deployment
+
+This app is ready for deployment on any Node-compatible platform.
+
+Recommended flow:
+
+1. Build using `npm run build`
+2. Serve using `npm start`
+3. Configure environment variables if/when backend integrations are added
+
+For Vercel deployment, import the repo and use default Next.js build settings.
+
+## Future Hardening (Optional)
+
+- Add component tests for key section render paths
+- Add visual regression snapshots for hero + section dividers
+- Introduce CMS/content layer for copy and card data
+- Add analytics + conversion event tracking for CTA buttons
